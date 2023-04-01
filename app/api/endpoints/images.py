@@ -5,6 +5,7 @@ from starlette.responses import RedirectResponse
 from app.utils.dynamo_db import create_task
 from app.utils.s3 import get_s3_image_url, get_free_file_key, get_s3_client
 from app.settings import settings
+from app.utils.sqs import push_sqs_message
 
 images_router = APIRouter(prefix='/upload_pictures', tags=[""])
 
@@ -34,6 +35,9 @@ def upload_file_bytes(file: UploadFile):
         Key=key
     )
     task_id = create_task(key, file.filename)
+    push_sqs_message({
+        "task_id": task_id
+    })
     return {
         "s3_key": key,
         "task_id": task_id
