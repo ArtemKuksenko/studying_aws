@@ -1,8 +1,8 @@
-fastapi==0.88.0
+fastapi==0.87.0
 uvicorn==0.20.0
 starlette==0.21.0
 pydantic==1.10.2
 
 boto3==1.24.59
 botocore==1.27.59
-boto3_type_annotations=0.3.1
+boto3_type_annotations==0.3.1
