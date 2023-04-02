@@ -10,6 +10,16 @@ def get_queue() -> sqs.Queue:
     return boto3.resource('sqs', **config).get_queue_by_name(QueueName=settings.queue_name)
 
 
+def pull_one_message() -> sqs.Message:
+    sqs = boto3.resource('sqs', **config)
+    queue = sqs.get_queue_by_name(QueueName=settings.queue_name)
+
+    message = queue.receive_messages(MaxNumberOfMessages=1)
+    if not message:
+        raise ValueError(f"No message in SQS {settings.queue_name}")
+    return message[0]
+
+
 def push_sqs_message(data: dict, queue: sqs.Queue = None) -> None:
     if queue is None:
         queue = get_queue()
