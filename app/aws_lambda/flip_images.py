@@ -1,12 +1,15 @@
 import json
 
+from app.controller.images import process_image
 from app.utils.dynamo_db import update_task_state, get_project_table
+from app.utils.s3 import download_file
 from app.utils.sqs import pull_one_message
 from app.utils.task_states_const import task_states
 
 
 def flip_the_image(task: dict[str, str]) -> None:
-
+    file = download_file(task['file_path_orig'])
+    process_image(file)
     pass
 
 
@@ -39,4 +42,10 @@ def main(*args) -> dict:
 
 
 if __name__ == "__main__":
-    main()
+    flip_the_image({
+        'file_name': 'reddit.wallpaper.png',
+        'file_path_edited': '',
+        'file_path_orig': 'upload_images/pgjmdiwegt/reddit.wallpaper.png',
+        'state': 'in progress',
+        'task_id': 'upload_images/pgjmdiwegt/reddit.wallpaper.png'
+    })

@@ -36,6 +36,14 @@ def get_s3_image_url(key: str, s3_client: s3.Client = None) -> str:
     )
 
 
+def download_file(key: str, s3_client: s3.Client = None) -> bytes:
+    if s3_client is None:
+        s3_client = get_s3_client()
+    s3_response_object = s3_client.get_object(Bucket=settings.bucket_name, Key=key)
+    object_content = s3_response_object['Body'].read()
+    return object_content
+
+
 def get_free_file_key(file_name: str, s3_client: s3.Client, prefix: str = "upload_images/") -> str:
     key = f"{prefix}{get_random_string()}/{file_name}"
     try:
