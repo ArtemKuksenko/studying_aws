@@ -42,12 +42,12 @@ def create_task(file_path_orig: str, file_name: str, db_client: dynamodb.client 
     return task_id
 
 
-def update_task_state(task_id: str, state: str, table: dynamodb.Table = None) -> None:
+def update_task_state(task_id: str, state: str, table: dynamodb.Table = None, return_values: str = 'NONE') -> None | dict:
     if state not in task_states.all_states:
         raise ValueError("Not correct states")
     if table is None:
         table = get_project_table()
-    table.update_item(
+    response = table.update_item(
         Key={"task_id": task_id},
         UpdateExpression="set #state = :n",
         ExpressionAttributeNames={
@@ -55,5 +55,7 @@ def update_task_state(task_id: str, state: str, table: dynamodb.Table = None) ->
         },
         ExpressionAttributeValues={
             ":n": state,
-        }
+        },
+        ReturnValues=return_values
     )
+    return response.get('Attributes')

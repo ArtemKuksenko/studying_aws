@@ -5,6 +5,11 @@ from app.utils.sqs import pull_one_message
 from app.utils.task_states_const import task_states
 
 
+def flip_the_image(task: dict[str, str]) -> None:
+
+    pass
+
+
 def main(*args) -> dict:
     if args:
         print("event = {}".format(args[0]))
@@ -12,10 +17,10 @@ def main(*args) -> dict:
     message = pull_one_message()
     task_id = json.loads(message.body)["task_id"]
     table = get_project_table()
-    update_task_state(task_id, task_states.in_progress, table=table)
+    task = update_task_state(task_id, task_states.in_progress, table=table, return_values='ALL_NEW')
 
     try:
-        pass
+        flip_the_image(task)
     except Exception as e:
         print(e)
         update_task_state(task_id, task_states.crashed, table=table)
