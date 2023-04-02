@@ -15,5 +15,14 @@ class TaskStatesConst:
     def crashed(self) -> str:
         return "crashed"
 
+    @property
+    def all_states(self) -> list[str]:
+        return [
+            self.created,
+            self.in_progress,
+            self.done,
+            self.crashed,
+        ]
+
 
 task_states = TaskStatesConst()
