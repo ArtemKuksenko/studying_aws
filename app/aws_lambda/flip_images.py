@@ -1,16 +1,24 @@
 import json
 
-from app.controller.images import process_image
+from app.controller.images import rotate_image
+from app.settings import settings
 from app.utils.dynamo_db import update_task_state, get_project_table
-from app.utils.s3 import download_file
+from app.utils.s3 import download_file, get_s3_client
 from app.utils.sqs import pull_one_message
 from app.utils.task_states_const import task_states
 
 
-def flip_the_image(task: dict[str, str]) -> None:
-    file = download_file(task['file_path_orig'])
-    process_image(file)
-    pass
+def process_the_task_image(task: dict[str, str]) -> None:
+    s3_client = get_s3_client()
+
+    file = download_file(task['file_path_orig'], s3_client=s3_client)
+    processed_file = rotate_image(file)
+
+    s3_client.upload_fileobj(
+        processed_file,
+        Bucket=settings.bucket_name,
+        Key=task['file_path_edited']
+    )
 
 
 def main(*args) -> dict:
@@ -23,7 +31,7 @@ def main(*args) -> dict:
     task = update_task_state(task_id, task_states.in_progress, table=table, return_values='ALL_NEW')
 
     try:
-        flip_the_image(task)
+        process_the_task_image(task)
     except Exception as e:
         print(e)
         update_task_state(task_id, task_states.crashed, table=table)
@@ -42,9 +50,9 @@ def main(*args) -> dict:
 
 
 if __name__ == "__main__":
-    flip_the_image({
+    process_the_task_image({
         'file_name': 'reddit.wallpaper.png',
-        'file_path_edited': '',
+        'file_path_edited': 'download_images/pgjmdiwegt/reddit.wallpaper.gif',
         'file_path_orig': 'upload_images/pgjmdiwegt/reddit.wallpaper.png',
         'state': 'in progress',
         'task_id': 'upload_images/pgjmdiwegt/reddit.wallpaper.png'
