@@ -33,12 +33,17 @@ def main(*args) -> dict:
         print("event = {}".format(args[0]))
     print(f"args: {args}")
     message = pull_one_message()
+    print("message is uploaded")
     task_id = json.loads(message.body)["task_id"]
+    print(f"task_id: {task_id}")
     table = get_project_table()
     task = update_task_state(task_id, task_states.in_progress, table=table, return_values='ALL_NEW')
 
     try:
+        print("start task processing")
         file_path_edited = process_the_task_image(task)
+        print("task is processed")
+
         table.update_item(
             Key={"task_id": task_id},
             UpdateExpression="set #file_path_edited = :p, #state = :s",
