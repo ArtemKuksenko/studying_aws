@@ -1,3 +1,5 @@
+from typing import Tuple
+
 import boto3
 from fastapi import HTTPException
 
@@ -45,7 +47,7 @@ def download_file(key: str, s3_client: s3.Client = None) -> bytes:
     return object_content
 
 
-def get_free_file_key(file_name: str, s3_client: s3.Client) -> tuple[str, str]:
+def get_free_file_key(file_name: str, s3_client: s3.Client) -> Tuple[str, str]:
     folder_name = get_random_string()
     key = f"{settings.upload_images_folder}/{folder_name}/{file_name}"
     try:

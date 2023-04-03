@@ -1,4 +1,5 @@
 import json
+from typing import Dict
 
 from app.controller.images import rotate_image
 from app.settings import settings
@@ -8,7 +9,7 @@ from app.controller.sqs import pull_one_message
 from app.controller.task_states_const import task_states
 
 
-def process_the_task_image(task: dict[str, str]) -> str:
+def process_the_task_image(task: Dict[str, str]) -> str:
     s3_client = get_s3_client()
 
     file = download_file(task['file_path_orig'], s3_client=s3_client)

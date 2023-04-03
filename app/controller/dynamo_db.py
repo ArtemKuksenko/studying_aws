@@ -1,3 +1,5 @@
+from typing import Union
+
 import boto3
 from boto3_type_annotations import dynamodb
 from fastapi import HTTPException
@@ -45,7 +47,7 @@ def create_task(file_path_orig: str, folder: str, file_name: str, db_client: dyn
 
 def update_task_state(
         task_id: str, state: str, table: dynamodb.Table = None, return_values: str = 'NONE'
-) -> None | dict:
+) -> Union[None, dict]:
     if state not in task_states.all_states:
         raise ValueError("Not correct states")
 

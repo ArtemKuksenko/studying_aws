@@ -1,3 +1,6 @@
+from typing import List
+
+
 class TaskStatesConst:
     @property
     def created(self) -> str:
@@ -16,7 +19,7 @@ class TaskStatesConst:
         return "crashed"
 
     @property
-    def all_states(self) -> list[str]:
+    def all_states(self) -> List[str]:
         return [
             self.created,
             self.in_progress,
