@@ -2,9 +2,9 @@ import boto3
 from boto3_type_annotations import dynamodb
 from fastapi import HTTPException
 
+from app.controller import config
 from app.settings import settings
-from app.utils import config
-from app.utils.task_states_const import task_states
+from app.controller.task_states_const import task_states
 
 
 def get_db_client() -> dynamodb.client:

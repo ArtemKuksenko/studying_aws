@@ -1,8 +1,8 @@
 import boto3
 from boto3_type_annotations import sqs
 
+from app.controller import config
 from app.settings import settings
-from app.utils import config
 import ujson as json
 
 

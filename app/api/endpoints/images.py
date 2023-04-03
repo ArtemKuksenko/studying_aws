@@ -1,11 +1,11 @@
 from fastapi import APIRouter, HTTPException
 from fastapi import UploadFile
 
-from app.utils.dynamo_db import create_task, get_item
-from app.utils.s3 import get_s3_image_url, get_free_file_key, get_s3_client
+from app.controller.dynamo_db import create_task, get_item
+from app.controller.s3 import get_s3_image_url, get_free_file_key, get_s3_client
 from app.settings import settings
-from app.utils.sqs import push_sqs_message
-from app.utils.task_states_const import task_states
+from app.controller.sqs import push_sqs_message
+from app.controller.task_states_const import task_states
 
 images_router = APIRouter(prefix='/images', tags=[""])
 

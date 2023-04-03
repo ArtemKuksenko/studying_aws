@@ -2,10 +2,10 @@ import json
 
 from app.controller.images import rotate_image
 from app.settings import settings
-from app.utils.dynamo_db import update_task_state, get_project_table
-from app.utils.s3 import download_file, get_s3_client
-from app.utils.sqs import pull_one_message
-from app.utils.task_states_const import task_states
+from app.controller.dynamo_db import update_task_state, get_project_table
+from app.controller.s3 import download_file, get_s3_client
+from app.controller.sqs import pull_one_message
+from app.controller.task_states_const import task_states
 
 
 def process_the_task_image(task: dict[str, str]) -> str:

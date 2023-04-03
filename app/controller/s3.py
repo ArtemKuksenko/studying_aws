@@ -1,11 +1,12 @@
 import boto3
 from fastapi import HTTPException
 
+from app.controller import config
 from app.settings import settings
 from boto3_type_annotations import s3
 from botocore import exceptions
 
-from app.utils import config, get_random_string
+from app.utils import get_random_string
 
 
 def get_s3_client() -> s3.Client:
