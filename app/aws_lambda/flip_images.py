@@ -67,3 +67,7 @@ def main(*args) -> dict:
         "file_path_edited": file_path_edited,
         "dropped": bool(dropped)
     }
+
+
+if __name__ == "__main__":
+    main()

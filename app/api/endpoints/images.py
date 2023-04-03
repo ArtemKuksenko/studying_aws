@@ -2,22 +2,18 @@ from fastapi import APIRouter, HTTPException
 from fastapi import UploadFile
 from starlette.responses import RedirectResponse
 
-from app.utils.dynamo_db import create_task
+from app.utils.dynamo_db import create_task, get_item
 from app.utils.s3 import get_s3_image_url, get_free_file_key, get_s3_client
 from app.settings import settings
 from app.utils.sqs import push_sqs_message
+from app.utils.task_states_const import task_states
 
-images_router = APIRouter(prefix='/upload_pictures', tags=[""])
-
-
-@images_router.get("/get_reddit_wallpaper.png", response_class=RedirectResponse)
-async def get_reddit_wallpaper() -> str:
-    return get_s3_image_url('reddit.wallpaper.png')
+images_router = APIRouter(prefix='/images', tags=[""])
 
 
-@images_router.get("/{file_name}", response_class=RedirectResponse)
+@images_router.get("/download/{file_name}", response_class=RedirectResponse)
 async def get_upload_image(file_name: str) -> str:
-    return get_s3_image_url(f"upload_pictures/{file_name}")
+    return get_s3_image_url(f"{settings.download_images_folder}/{file_name}")
 
 
 @images_router.post("/")
@@ -39,6 +35,18 @@ def upload_file_bytes(file: UploadFile):
         "task_id": task_id
     })
     return {
-        "s3_key": file_key,
         "task_id": task_id
+    }
+
+
+@images_router.get("/task/{task_id}")
+async def get_upload_image(task_id: str) -> dict:
+    response = get_item(task_id)
+    state = response['state']['S']
+    if state != task_states.done:
+        return {'state': state}
+
+    return {
+        'state': state,
+        'image_url': get_s3_image_url(response['file_path_edited']['S'])
     }

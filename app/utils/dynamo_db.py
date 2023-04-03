@@ -1,5 +1,6 @@
 import boto3
 from boto3_type_annotations import dynamodb
+from fastapi import HTTPException
 
 from app.settings import settings
 from app.utils import config
@@ -63,3 +64,21 @@ def update_task_state(
         ReturnValues=return_values
     )
     return response.get('Attributes')
+
+
+def get_item(task_id: str, db_client: dynamodb.client = None):
+    if db_client is None:
+        db_client = get_db_client()
+
+    response = db_client.get_item(
+        TableName=settings.dynamo_db_table_name,
+        Key={
+            "task_id": {
+                "S": task_id
+            }
+        }
+    )
+    content = response.get('Item')
+    if not content:
+        raise HTTPException(status_code=404, detail=f"The task {task_id} does not exist")
+    return content
