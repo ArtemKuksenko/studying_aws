@@ -14,8 +14,8 @@ def get_project_table() -> dynamodb.Table:
     return boto3.resource("dynamodb", **config).Table(settings.dynamo_db_table_name)
 
 
-def create_task(file_path_orig: str, file_name: str, db_client: dynamodb.client = None) -> str:
-    task_id = file_path_orig
+def create_task(file_path_orig: str, folder: str, file_name: str, db_client: dynamodb.client = None) -> str:
+    task_id = folder
     # todo be ensure, that the task_id is free
     if db_client is None:
         db_client = get_db_client()
@@ -42,19 +42,23 @@ def create_task(file_path_orig: str, file_name: str, db_client: dynamodb.client 
     return task_id
 
 
-def update_task_state(task_id: str, state: str, table: dynamodb.Table = None, return_values: str = 'NONE') -> None | dict:
+def update_task_state(
+        task_id: str, state: str, table: dynamodb.Table = None, return_values: str = 'NONE'
+) -> None | dict:
     if state not in task_states.all_states:
         raise ValueError("Not correct states")
+
     if table is None:
         table = get_project_table()
+
     response = table.update_item(
         Key={"task_id": task_id},
-        UpdateExpression="set #state = :n",
+        UpdateExpression="set #state = :s",
         ExpressionAttributeNames={
             "#state": "state",
         },
         ExpressionAttributeValues={
-            ":n": state,
+            ":s": state,
         },
         ReturnValues=return_values
     )

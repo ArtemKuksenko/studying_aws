@@ -27,18 +27,18 @@ def upload_file_bytes(file: UploadFile):
         raise HTTPException(status_code=409, detail=f"The file is not an image.")
 
     s3_client = get_s3_client()
-    key = get_free_file_key(file.filename, s3_client)
+    file_key, folder = get_free_file_key(file.filename, s3_client)
 
     s3_client.upload_fileobj(
         file.file,
         Bucket=settings.bucket_name,
-        Key=key
+        Key=file_key
     )
-    task_id = create_task(key, file.filename)
+    task_id = create_task(file_key, folder, file.filename)
     push_sqs_message({
         "task_id": task_id
     })
     return {
-        "s3_key": key,
+        "s3_key": file_key,
         "task_id": task_id
     }

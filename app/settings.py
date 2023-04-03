@@ -7,6 +7,9 @@ class Settings(BaseSettings):
     dynamo_db_table_name: str = 'task'
     queue_name: str = 'flip-images-tasks-queue'
 
+    upload_images_folder: str = "upload_images"
+    download_images_folder: str = "download_images"
+
     port: int = 8080
 
 

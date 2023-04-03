@@ -44,13 +44,14 @@ def download_file(key: str, s3_client: s3.Client = None) -> bytes:
     return object_content
 
 
-def get_free_file_key(file_name: str, s3_client: s3.Client, prefix: str = "upload_images/") -> str:
-    key = f"{prefix}{get_random_string()}/{file_name}"
+def get_free_file_key(file_name: str, s3_client: s3.Client) -> tuple[str, str]:
+    folder_name = get_random_string()
+    key = f"{settings.upload_images_folder}/{folder_name}/{file_name}"
     try:
         s3_client.head_object(Bucket=settings.bucket_name, Key=key)
     except exceptions.ClientError as e:
         if e.response['Error']['Code'] == "404":
             # we sure that no file by the key
-            return key
+            return key, folder_name
         raise e
     return get_free_file_key(file_name, s3_client)
