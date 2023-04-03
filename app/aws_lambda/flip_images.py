@@ -47,13 +47,3 @@ def main(*args) -> dict:
         "task": res_task,
         "dropped": bool(dropped)
     }
-
-
-if __name__ == "__main__":
-    process_the_task_image({
-        'file_name': 'reddit.wallpaper.png',
-        'file_path_edited': 'download_images/pgjmdiwegt/reddit.wallpaper.gif',
-        'file_path_orig': 'upload_images/pgjmdiwegt/reddit.wallpaper.png',
-        'state': 'in progress',
-        'task_id': 'upload_images/pgjmdiwegt/reddit.wallpaper.png'
-    })
