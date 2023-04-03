@@ -71,7 +71,7 @@ def main(*args) -> dict:
         "task_id": task_id,
         "task": res_task,
         "file_path_edited": file_path_edited,
-        "dropped": bool(dropped)
+        "sqs message dropped": bool(dropped)
     }
 
 
