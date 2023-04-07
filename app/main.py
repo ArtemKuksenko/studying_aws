@@ -7,6 +7,7 @@ from app.api.routers import api_router
 app = FastAPI(
     openapi_url='/docs/openapi.json'
 )
+
 app.include_router(api_router)
 app.add_middleware(GZipMiddleware)
 app.add_middleware(
