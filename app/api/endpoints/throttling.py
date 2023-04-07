@@ -11,7 +11,6 @@ START_TIME = datetime.now()
 
 @throttling.get("/app_number")
 async def root():
-    # from app.main import UNIQUE_APP_NUNBER, START_TIME
     return {
         "app_number": UNIQUE_APP_NUNBER,
         "start_time": START_TIME
