@@ -56,5 +56,7 @@ def get_free_file_key(file_name: str, s3_client: s3.Client) -> Tuple[str, str]:
         if e.response['Error']['Code'] == "404":
             # we sure that no file by the key
             return key, folder_name
-        raise e
+        print("raise error head_object")
+        print(e)
+        raise HTTPException(status_code=500, detail=str(e))
     return get_free_file_key(file_name, s3_client)
