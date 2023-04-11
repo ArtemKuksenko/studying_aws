@@ -13,7 +13,8 @@ START_TIME = datetime.now()
 async def root():
     return {
         "app_number": UNIQUE_APP_NUNBER,
-        "start_time": START_TIME
+        "start_time": START_TIME,
+        "version": 0.01
     }
 
 
