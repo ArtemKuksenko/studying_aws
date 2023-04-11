@@ -10,6 +10,10 @@ def get_queue() -> sqs.Queue:
     return boto3.resource('sqs', **config).get_queue_by_name(QueueName=settings.queue_name)
 
 
+def get_sqs_client():
+    return boto3.client('sqs', **config)
+
+
 def pull_one_message() -> sqs.Message:
     message = get_queue().receive_messages(MaxNumberOfMessages=1)
     if not message:
